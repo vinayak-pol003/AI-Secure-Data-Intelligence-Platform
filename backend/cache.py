@@ -26,14 +26,20 @@ def make_cache_key(content: str, scope: str) -> str:
 
 
 async def get_cached(key: str) -> dict | None:
-    r = await get_redis()
-    data = await r.get(key)
-    return json.loads(data) if data else None
+    try:
+        r = await get_redis()
+        data = await r.get(key)
+        return json.loads(data) if data else None
+    except Exception:
+        return None
 
 
 async def set_cached(key: str, value: dict, ttl: int = CACHE_TTL) -> None:
-    r = await get_redis()
-    await r.setex(key, ttl, json.dumps(value))
+    try:
+        r = await get_redis()
+        await r.setex(key, ttl, json.dumps(value))
+    except Exception:
+        pass  # cache miss is acceptable — don't crash the request
 
 
 async def close_redis() -> None:
