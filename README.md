@@ -405,3 +405,93 @@ Visit `http://localhost:8080` when Docker is running.
 5. Paste it as `ANTHROPIC_API_KEY` in your `backend/.env`
 
 OpenRouter gives you access to Claude and other AI models. The free tier is sufficient for development and demos.
+
+---
+
+## Deployment (Vercel + Railway)
+
+Vercel hosts the **frontend**. Railway hosts the **backend, PostgreSQL, and Redis**.
+
+---
+
+### Step 1 — Deploy the Backend on Railway
+
+Railway runs your Docker container and manages the database for free.
+
+1. Go to [railway.app](https://railway.app) and sign up with GitHub
+2. Click **New Project** → **Deploy from GitHub repo**
+3. Select your SISA repository
+4. Railway will detect the `railway.toml` and build the backend Docker image
+
+**Add PostgreSQL:**
+- In your project dashboard click **+ New** → **Database** → **PostgreSQL**
+- Railway auto-creates it and gives you a `DATABASE_URL`
+
+**Add Redis:**
+- Click **+ New** → **Database** → **Redis**
+- Railway auto-creates it and gives you a `REDIS_URL`
+
+**Set environment variables** on the backend service (Variables tab):
+
+| Variable | Value |
+|---|---|
+| `ANTHROPIC_API_KEY` | Your OpenRouter key (`sk-or-v1-...`) |
+| `API_KEY` | A random secret (generate: `python -c "import secrets; print(secrets.token_hex(32))"`) |
+| `DATABASE_URL` | Copy from the Railway PostgreSQL service (use the **internal** URL) |
+| `REDIS_URL` | Copy from the Railway Redis service (use the **internal** URL) |
+| `ALLOWED_ORIGINS` | `https://your-app.vercel.app` (fill in after Vercel deploy) |
+| `MAX_FILE_BYTES` | `10485760` |
+
+5. Deploy — Railway builds and starts the container
+6. Go to **Settings** → **Networking** → **Generate Domain**
+7. Copy the backend URL (e.g., `https://sisa-backend.up.railway.app`) — you'll need it next
+
+---
+
+### Step 2 — Deploy the Frontend on Vercel
+
+1. Go to [vercel.com](https://vercel.com) and log in with GitHub
+2. Click **Add New** → **Project**
+3. Import your SISA GitHub repository
+4. Vercel detects `vercel.json` automatically — the root directory and build command are pre-configured
+
+**Set environment variables** in Vercel (before clicking Deploy):
+
+| Variable | Value |
+|---|---|
+| `VITE_API_URL` | Your Railway backend URL (e.g., `https://sisa-backend.up.railway.app`) |
+| `VITE_API_KEY` | Same value you set as `API_KEY` in Railway |
+
+5. Click **Deploy**
+6. When done, copy your Vercel URL (e.g., `https://sisa.vercel.app`)
+
+---
+
+### Step 3 — Update CORS on Railway
+
+Now that you have the Vercel URL, go back to Railway → backend service → Variables:
+
+- Update `ALLOWED_ORIGINS` to your actual Vercel URL:
+  ```
+  https://sisa.vercel.app
+  ```
+- Railway will redeploy automatically
+
+---
+
+### Final URLs
+
+| Service | URL |
+|---|---|
+| Frontend | `https://your-app.vercel.app` |
+| Backend API | `https://sisa-backend.up.railway.app` |
+| API Docs | `https://sisa-backend.up.railway.app/docs` |
+
+---
+
+### Re-deploying After Code Changes
+
+**Frontend** — push to GitHub → Vercel auto-deploys
+
+**Backend** — push to GitHub → Railway auto-deploys (if auto-deploy is enabled in Railway settings)
+
