@@ -71,7 +71,7 @@ export default function App() {
             <span style={styles.brandHex}>⬡</span>
             <div>
               <div style={styles.brandName}>SENTINEL</div>
-              <div style={styles.brandTagline}>AI Secure Data Intelligence Platform</div>
+              <div style={styles.brandTagline} className="brand-tagline">AI Secure Data Intelligence Platform</div>
             </div>
           </div>
           <div style={styles.statusChip}>
@@ -82,7 +82,7 @@ export default function App() {
       </header>
 
       {/* Main layout */}
-      <div style={activeTab === "history" ? styles.layoutFull : styles.layout}>
+      <div className={activeTab === "history" ? "app-layout-full" : "app-layout"}>
         {/* LEFT: Input (hidden when history tab active) */}
         {activeTab !== "history" && (
         <div style={styles.leftCol}>
@@ -173,7 +173,7 @@ export default function App() {
 
         {/* RIGHT: Results */}
         {activeTab !== "history" && (
-        <div style={styles.rightCol}>
+        <div className="right-col">
           {!result && !loading && (
             <div style={styles.emptyCard}>
               <div style={styles.emptyHex}>⬡</div>
@@ -222,6 +222,49 @@ export default function App() {
         @keyframes spin    { to { transform: rotate(360deg); } }
         @keyframes pulse   { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+        /* ── Responsive layout ── */
+        .app-layout {
+          width: 100%; padding: 28px 32px;
+          display: grid; grid-template-columns: 1fr 1fr;
+          gap: 20px; position: relative; z-index: 1; align-items: start;
+        }
+        .app-layout-full {
+          width: 100%; padding: 28px 32px;
+          display: block; position: relative; z-index: 1;
+        }
+        .right-col {
+          display: flex; flex-direction: column; gap: 20px;
+          position: sticky; top: 80px;
+        }
+        .tab-bar {
+          display: flex; gap: 4px;
+          background: rgba(255,255,255,0.02);
+          padding: 4px; border-radius: 10px;
+          flex-wrap: wrap;
+        }
+        .brand-tagline { display: block; }
+        @media (max-width: 768px) {
+          .app-layout {
+            grid-template-columns: 1fr;
+            padding: 16px;
+            gap: 14px;
+          }
+          .app-layout-full { padding: 16px; }
+          .right-col { position: static; }
+          .brand-tagline { display: none; }
+          .scan-history-root { grid-template-columns: 1fr !important; }
+          .scan-history-root > *:last-child {
+            border-left: none !important;
+            padding-left: 0 !important;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 16px;
+          }
+        }
+        @media (max-width: 480px) {
+          .app-layout { padding: 10px; gap: 10px; }
+          .app-layout-full { padding: 10px; }
+        }
       `}</style>
     </div>
   );
@@ -233,7 +276,7 @@ const styles: Record<string, CSSProperties> = {
   bg2: { position: "fixed", bottom: "-200px", right: "-200px", width: "600px", height: "600px", borderRadius: "50%", background: "radial-gradient(circle, rgba(255,45,85,0.04) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 },
   bg3: { position: "fixed", top: "40%", left: "40%", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(255,107,0,0.02) 0%, transparent 70%)", pointerEvents: "none", zIndex: 0 },
   header: { position: "sticky", top: 0, zIndex: 100, background: "rgba(4,8,16,0.85)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,0.05)" },
-  headerInner: { width: "100%", padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "space-between" },
+  headerInner: { width: "100%", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" },
   brand: { display: "flex", alignItems: "center", gap: "14px" },
   brandHex: { fontSize: "26px", color: "#00f5ff" },
   brandName: { fontFamily: "'Space Mono', monospace", fontSize: "18px", fontWeight: 700, color: "#fff", letterSpacing: "0.18em" },
@@ -244,13 +287,13 @@ const styles: Record<string, CSSProperties> = {
   layoutFull: { width: "100%", padding: "28px 32px", display: "block", position: "relative", zIndex: 1 },
   leftCol: { display: "flex", flexDirection: "column", gap: "20px" },
   rightCol: { display: "flex", flexDirection: "column", gap: "20px", position: "sticky", top: "80px" },
-  card: { background: "rgba(10,15,26,0.85)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "16px", padding: "24px", backdropFilter: "blur(12px)", display: "flex", flexDirection: "column", gap: "16px" },
+  card: { background: "rgba(10,15,26,0.85)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "16px", padding: "clamp(14px, 3vw, 24px)", backdropFilter: "blur(12px)", display: "flex", flexDirection: "column", gap: "16px" },
   cardLabel: { fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.2em", color: "rgba(255,255,255,0.25)", display: "flex", alignItems: "center", gap: "10px" },
   cardNum: { color: "rgba(0,245,255,0.4)" },
   tabBar: { display: "flex", gap: "4px", background: "rgba(255,255,255,0.02)", padding: "4px", borderRadius: "10px" },
-  tabBtn: { flex: 1, padding: "8px 4px", border: "1px solid transparent", borderRadius: "7px", background: "transparent", color: "rgba(255,255,255,0.35)", fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.06em", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", transition: "all 0.2s" },
+  tabBtn: { flex: "1 1 auto", minWidth: "44px", padding: "8px 4px", border: "1px solid transparent", borderRadius: "7px", background: "transparent", color: "rgba(255,255,255,0.35)", fontFamily: "'Space Mono', monospace", fontSize: "10px", letterSpacing: "0.06em", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", transition: "all 0.2s" },
   tabBtnActive: { background: "rgba(0,245,255,0.08)", border: "1px solid rgba(0,245,255,0.2)", color: "#00f5ff" },
-  textarea: { width: "100%", minHeight: "260px", padding: "14px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", color: "#c8d3e0", fontFamily: "'Space Mono', monospace", fontSize: "12px", lineHeight: "1.75", resize: "vertical", outline: "none", transition: "border-color 0.2s" },
+  textarea: { width: "100%", minHeight: "200px", padding: "14px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px", color: "#c8d3e0", fontFamily: "'Space Mono', monospace", fontSize: "12px", lineHeight: "1.75", resize: "vertical", outline: "none", transition: "border-color 0.2s" },
   optionsRow: { display: "flex", alignItems: "center", justifyContent: "space-between" },
   checkLabel: { display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "rgba(255,255,255,0.35)", cursor: "pointer" },
   charCount: { fontFamily: "'Space Mono', monospace", fontSize: "10px", color: "rgba(255,255,255,0.2)" },

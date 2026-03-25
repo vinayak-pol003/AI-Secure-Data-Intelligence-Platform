@@ -163,8 +163,8 @@ const styles: Record<string, CSSProperties> = {
     background: "rgba(4,8,16,0.6)",
   },
   toolbar: {
-    display: "flex", alignItems: "center", justifyContent: "space-between",
-    padding: "10px 16px",
+    display: "flex", alignItems: "flex-start", justifyContent: "space-between",
+    padding: "10px 12px",
     background: "rgba(255,255,255,0.03)",
     borderBottom: "1px solid rgba(255,255,255,0.05)",
     flexWrap: "wrap", gap: "8px",
@@ -184,7 +184,7 @@ const styles: Record<string, CSSProperties> = {
     background: "rgba(255,214,10,0.08)",
     borderRadius: "4px",
   },
-  toolbarRight: { display: "flex", alignItems: "center", gap: "6px" },
+  toolbarRight: { display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" },
   filterBtn: {
     padding: "4px 10px",
     background: "transparent",
@@ -216,8 +216,9 @@ const styles: Record<string, CSSProperties> = {
     color: "#30d158",
   },
   logContainer: {
-    maxHeight: "340px", overflowY: "auto",
+    maxHeight: "clamp(200px, 40vh, 340px)", overflowY: "auto",
     fontFamily: "'Space Mono', monospace",
+    overflowX: "hidden",
   },
   logLine: {
     display: "flex", alignItems: "flex-start", gap: "0",

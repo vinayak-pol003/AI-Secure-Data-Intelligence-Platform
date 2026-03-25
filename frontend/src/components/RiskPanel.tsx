@@ -186,12 +186,12 @@ export default function RiskPanel({ result }: { result: AnalysisResult | null })
 const styles: Record<string, CSSProperties> = {
   wrapper: { display: "flex", flexDirection: "column", gap: "16px" },
   heroCard: {
-    padding: "20px 24px",
+    padding: "clamp(12px, 3vw, 20px) clamp(14px, 4vw, 24px)",
     border: "1px solid",
     borderRadius: "14px",
     display: "flex", alignItems: "center",
     justifyContent: "space-between",
-    flexWrap: "wrap", gap: "16px",
+    flexWrap: "wrap", gap: "12px",
     background: "rgba(10,15,26,0.6)",
     transition: "box-shadow 0.3s",
   },
@@ -199,7 +199,7 @@ const styles: Record<string, CSSProperties> = {
   heroIcon: { fontSize: "36px", lineHeight: 1 },
   heroLevel: {
     fontFamily: "'Space Mono', monospace",
-    fontSize: "22px", fontWeight: 700, letterSpacing: "0.05em",
+    fontSize: "clamp(16px, 4vw, 22px)", fontWeight: 700, letterSpacing: "0.05em",
   },
   heroSublabel: {
     fontFamily: "'Space Mono', monospace",
@@ -210,7 +210,7 @@ const styles: Record<string, CSSProperties> = {
   statItem: { textAlign: "center" },
   statValue: {
     fontFamily: "'Space Mono', monospace",
-    fontSize: "26px", fontWeight: 700, color: "#fff",
+    fontSize: "clamp(18px, 4vw, 26px)", fontWeight: 700, color: "#fff",
   },
   statLabel: {
     fontFamily: "'Space Mono', monospace",
@@ -230,8 +230,8 @@ const styles: Record<string, CSSProperties> = {
   },
   breakdownBar: {
     display: "grid", gridTemplateColumns: "repeat(4, 1fr)",
-    gap: "10px",
-    padding: "16px",
+    gap: "6px",
+    padding: "clamp(10px, 2vw, 16px)",
     background: "rgba(255,255,255,0.02)",
     border: "1px solid rgba(255,255,255,0.05)",
     borderRadius: "10px",
@@ -239,7 +239,7 @@ const styles: Record<string, CSSProperties> = {
   breakdownItem: { textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" },
   breakdownCount: {
     fontFamily: "'Space Mono', monospace",
-    fontSize: "28px", fontWeight: 700,
+    fontSize: "clamp(18px, 4vw, 28px)", fontWeight: 700,
   },
   breakdownLabel: {
     fontFamily: "'Space Mono', monospace",

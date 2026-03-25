@@ -103,7 +103,7 @@ export default function ScanHistory() {
   }
 
   return (
-    <div style={styles.root}>
+    <div style={styles.root} className="scan-history-root">
       {/* Scan list */}
       <div style={styles.listCol}>
         <div style={styles.listHeader}>
@@ -217,7 +217,7 @@ export default function ScanHistory() {
 const styles: Record<string, CSSProperties> = {
   root: {
     display: "grid",
-    gridTemplateColumns: "340px 1fr",
+    gridTemplateColumns: "min(300px, 35%) 1fr",
     gap: "16px",
     minHeight: "400px",
   },
@@ -255,7 +255,7 @@ const styles: Record<string, CSSProperties> = {
     flexDirection: "column",
     gap: "6px",
     overflowY: "auto",
-    maxHeight: "600px",
+    maxHeight: "clamp(300px, 60vh, 600px)",
   },
   scanRow: {
     background: "rgba(255,255,255,0.02)",
@@ -323,6 +323,8 @@ const styles: Record<string, CSSProperties> = {
     paddingLeft: "16px",
     display: "flex",
     flexDirection: "column",
+    minWidth: 0,
+    overflowX: "hidden",
   },
   detail: {
     display: "flex",
