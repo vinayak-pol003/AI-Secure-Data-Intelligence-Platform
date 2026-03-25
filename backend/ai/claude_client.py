@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
 logger = logging.getLogger(__name__)
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
 
 async def get_ai_insights(findings: List[Dict], risk_result: Dict, input_type: str) -> Dict:
     if not findings:
