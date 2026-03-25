@@ -1,6 +1,7 @@
 import httpx
 import json
 import os
+import logging
 from pathlib import Path
 from typing import List, Dict
 
@@ -10,6 +11,7 @@ from dotenv import load_dotenv
 # Do NOT use override=True — Docker Compose env vars must take precedence
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
+logger = logging.getLogger(__name__)
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
 async def get_ai_insights(findings: List[Dict], risk_result: Dict, input_type: str) -> Dict:
@@ -41,9 +43,9 @@ Respond ONLY with valid JSON in this exact format (no markdown, no backticks):
 }}"""
 
     _dbg = f"key={'SET' if ANTHROPIC_API_KEY else 'EMPTY'} len={len(ANTHROPIC_API_KEY)}"
-    open("ai_debug.txt", "w").write(_dbg + "\n")
+    logger.info("AI insights request: %s", _dbg)
     if not ANTHROPIC_API_KEY:
-        open("ai_debug.txt", "a").write("BRANCH: key empty -> fallback\n")
+        logger.warning("ANTHROPIC_API_KEY not set — using fallback insights")
         return _fallback_insights(findings, risk_result)
 
     try:
@@ -53,7 +55,7 @@ Respond ONLY with valid JSON in this exact format (no markdown, no backticks):
                 headers={
                     "Authorization": f"Bearer {ANTHROPIC_API_KEY}",
                     "Content-Type": "application/json",
-                    "HTTP-Referer": "http://localhost:8000",
+                    "HTTP-Referer": "https://sentinel-ai-iota-plum.vercel.app",
                     "X-Title": "SISA Security Platform",
                 },
                 json={
@@ -62,12 +64,13 @@ Respond ONLY with valid JSON in this exact format (no markdown, no backticks):
                     "messages": [{"role": "user", "content": prompt}]
                 }
             )
+            resp.raise_for_status()
             data = resp.json()
             text = data["choices"][0]["message"]["content"].strip()
             text = text.replace("```json", "").replace("```", "").strip()
             return json.loads(text)
     except Exception as e:
-        open("ai_debug.txt", "a").write(f"EXCEPTION: {type(e).__name__}: {e}\n")
+        logger.error("OpenRouter call failed: %s: %s", type(e).__name__, e)
         return _fallback_insights(findings, risk_result)
 
 
