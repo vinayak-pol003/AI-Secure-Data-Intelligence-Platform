@@ -64,11 +64,16 @@ Respond ONLY with valid JSON in this exact format (no markdown, no backticks):
                     "messages": [{"role": "user", "content": prompt}]
                 }
             )
-            resp.raise_for_status()
+            logger.info("OpenRouter response status: %s", resp.status_code)
+            if resp.status_code != 200:
+                logger.error("OpenRouter error body: %s", resp.text[:500])
+                return _fallback_insights(findings, risk_result)
             data = resp.json()
             text = data["choices"][0]["message"]["content"].strip()
             text = text.replace("```json", "").replace("```", "").strip()
-            return json.loads(text)
+            result = json.loads(text)
+            logger.info("*** REAL CLAUDE AI *** summary len=%d", len(result.get("summary", "")))
+            return result
     except Exception as e:
         logger.error("OpenRouter call failed: %s: %s", type(e).__name__, e)
         return _fallback_insights(findings, risk_result)
