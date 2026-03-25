@@ -50,7 +50,7 @@ export default function ScanHistory() {
     setError("");
     try {
       const data = await listScans(50, 0);
-      setScans(data);
+      setScans(Array.isArray(data) ? data : []);
     } catch {
       setError("Failed to load scan history. Is the backend reachable?");
     } finally {
