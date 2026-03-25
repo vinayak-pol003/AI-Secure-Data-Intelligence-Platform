@@ -93,7 +93,7 @@ export default function App() {
               {TABS.map((t) => (
                 <button
                   key={t.id}
-                  onClick={() => { setActiveTab(t.id); setResult(null); setError(""); }}
+                  onClick={() => { setActiveTab(t.id); setResult(null); setError(""); setTextInput(""); }}
                   style={{ ...styles.tabBtn, ...(activeTab === t.id ? styles.tabBtnActive : {}) }}
                 >
                   <span>{t.icon}</span><span>{t.label}</span>
@@ -159,7 +159,7 @@ export default function App() {
                 {TABS.map((t) => (
                   <button
                     key={t.id}
-                    onClick={() => { setActiveTab(t.id); setResult(null); setError(""); }}
+                    onClick={() => { setActiveTab(t.id); setResult(null); setError(""); setTextInput(""); }}
                     style={{ ...styles.tabBtn, ...(activeTab === t.id ? styles.tabBtnActive : {}) }}
                   >
                     <span>{t.icon}</span><span>{t.label}</span>
